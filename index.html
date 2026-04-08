@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제주 청소년 작가 클럽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #FAFAFA; color: #333333; }
+        html { scroll-behavior: smooth; }
+        .page-section { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: 1. Home 2. Strategy Report 3. History 4. Schedule -->
+    <!-- Visualization & Content Choices: Radar Chart for Operational Strategy Comparison -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased">
+    <nav class="bg-white/90 backdrop-blur-md border-b border-gray-200 fixed w-full z-50 top-0">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="navigate('home')">
+                    <span class="text-2xl font-bold text-[#E07A5F]">✏️ 제주청소년작가클럽</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <button onclick="navigate('home')" class="nav-btn text-[#E07A5F] font-medium transition-colors" data-target="home">소개</button>
+                    <button onclick="navigate('report')" class="nav-btn text-gray-600 hover:text-[#E07A5F] font-medium transition-colors" data-target="report">운영보고서</button>
+                    <button onclick="navigate('history')" class="nav-btn text-gray-600 hover:text-[#E07A5F] font-medium transition-colors" data-target="history">히스토리</button>
+                    <button onclick="navigate('schedule')" class="nav-btn text-gray-600 hover:text-[#E07A5F] font-medium transition-colors" data-target="schedule">모집/일정</button>
+                    <button onclick="navigate('join')" class="bg-[#E07A5F] text-white px-5 py-2 rounded-full font-medium hover:bg-[#c96a50] transition-colors shadow-sm">가입신청</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-20 pb-16">
+        <section id="home" class="page-section active max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <p class="text-[#81B29A] font-semibold tracking-wider mb-2">제주만화인연대 소속</p>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">서귀포를 넘어 제주 전역으로,<br>당신의 상상력이 작품이 됩니다.</h1>
+                <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                    서귀포 지역을 넘어 <strong class="text-gray-900">'제주 청소년 작가 클럽'</strong>으로 새롭게 확대 개편됩니다.<br>
+                    온라인과 오프라인을 넘나들며 현업 작가님들의 멘토링과 함께 성장하세요.
+                </p>
+                <button onclick="navigate('join')" class="bg-[#E07A5F] text-white px-8 py-3 rounded-full text-lg font-bold hover:bg-[#c96a50] transition-transform hover:scale-105 shadow-md">클럽 합류하기</button>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 mt-16 text-center">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="text-4xl mb-4">💻</div>
+                    <h3 class="text-xl font-bold mb-3">온+오프라인 하이브리드</h3>
+                    <p class="text-gray-600 text-sm">월 2회 온라인, 월 2회 오프라인 워크샵으로 진행됩니다. (토요일 오전 10-12시)</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-xl font-bold mb-3">현업 작가 멘토링</h3>
+                    <p class="text-gray-600 text-sm">제주 지역 현업 웹툰 작가님들이 직접 멘토로 참여하여 창작 노하우를 전수합니다.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="text-4xl mb-4">📍</div>
+                    <h3 class="text-xl font-bold mb-3">지역 거점 동아리</h3>
+                    <p class="text-gray-600 text-sm">지역별 인원 모집 시 독립 동아리로 분리하며 전담 지도 작가님을 배치합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="report" class="page-section max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-4 border-l-4 border-[#E07A5F] pl-4">운영 전략 보고서</h2>
+                <p class="text-gray-600">제주 만화 생태계 활성화를 위한 새로운 청소년 작가 클럽의 운영 전략입니다.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="bg-white p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-[#E07A5F] mb-3">■ 기존 동아리의 한계</h3>
+                        <p class="text-sm text-gray-600 mb-2">작가 1인 운영에 따른 재정적, 운영적 한계 직면</p>
+                        <ul class="text-sm space-y-2 text-gray-700">
+                            <li>• 서귀포 중심의 지역적 제한</li>
+                            <li>• 무료 운영으로 인한 강사 활동비 지원 부족</li>
+                            <li>• 운영 및 교육 전담 작가의 과부하</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-[#81B29A]">
+                        <h3 class="font-bold text-[#81B29A] mb-3">■ 신규 클럽 운영 전략</h3>
+                        <ul class="text-sm space-y-2 text-gray-700">
+                            <li>• <strong>유료 운영 전환:</strong> 지도 작가 활동비 확보 및 책임감 강화</li>
+                            <li>• <strong>작가 풀 연대:</strong> 제주만화인연대 작가님들을 멘토로 대거 영입</li>
+                            <li>• <strong>지역 순회 상담:</strong> 4월 중 제주 전역 상담 진행 후 5월 정식 운영</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="chart-container">
+                        <canvas id="strategyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="history" class="page-section max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+            <h2 class="text-3xl font-bold mb-8 text-center">히스토리</h2>
+            <div class="relative border-l-2 border-gray-200 ml-4 space-y-8">
+                <div class="pl-8 relative">
+                    <div class="absolute w-4 h-4 bg-[#E07A5F] rounded-full -left-[9px] top-1"></div>
+                    <h3 class="font-bold text-gray-900">클럽 개편 및 크라우드 펀딩 (현재)</h3>
+                    <p class="text-sm text-gray-500">와디즈 펀딩 및 전 지역 확대 개편</p>
+                </div>
+                <div class="pl-8 relative">
+                    <div class="absolute w-4 h-4 bg-gray-300 rounded-full -left-[9px] top-1"></div>
+                    <h3 class="font-bold text-gray-900">정기 전시 참여</h3>
+                    <p class="text-sm text-gray-500">서귀포 지역 전시 및 기록물 발간</p>
+                </div>
+                <div class="pl-8 relative">
+                    <div class="absolute w-4 h-4 bg-gray-300 rounded-full -left-[9px] top-1"></div>
+                    <h3 class="font-bold text-gray-900">서귀포 청소년 만화 동아리 1기 모집</h3>
+                    <p class="text-sm text-gray-500">2020년 활동의 시작</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule" class="page-section max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 text-center">
+            <h2 class="text-3xl font-bold mb-8">모집 및 일정</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-xl border">
+                    <h3 class="font-bold text-xl mb-4">📅 모집 타임라인</h3>
+                    <ul class="text-left space-y-4">
+                        <li><span class="font-bold text-[#E07A5F]">4월:</span> 전 지역 순회 상담 진행</li>
+                        <li><span class="font-bold text-[#81B29A]">5월:</span> 정식 클럽 운영 시작</li>
+                        <li><span class="font-bold">매주 토요일:</span> 오전 10시~12시 (정기모임)</li>
+                    </ul>
+                </div>
+                <div id="join" class="bg-gray-900 text-white p-8 rounded-xl">
+                    <h3 class="font-bold text-xl mb-4 text-[#E07A5F]">가입 신청 안내</h3>
+                    <p class="text-sm text-gray-400 mb-6">4월 지역 순회 상담 기간에 미리 신청해 주세요.</p>
+                    <button onclick="alert('가입 상담 신청 폼으로 연결됩니다.')" class="w-full bg-[#E07A5F] py-3 rounded-lg font-bold hover:bg-[#c96a50]">상담 예약하기</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function navigate(id) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.toggle('text-[#E07A5F]', b.dataset.target === id);
+                b.classList.toggle('text-gray-600', b.dataset.target !== id);
+            });
+            window.scrollTo(0, 0);
+        }
+        
+        window.addEventListener('load', () => {
+            const ctx = document.getElementById('strategyChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['지속가능성', '지역접근성', '교육퀄리티', '작가보상', '조직규모'],
+                    datasets: [{
+                        label: '기존(1인)',
+                        data: [30, 20, 60, 10, 30],
+                        backgroundColor: 'rgba(156, 163, 175, 0.2)',
+                        borderColor: 'rgba(156, 163, 175, 1)'
+                    }, {
+                        label: '작가클럽(연대)',
+                        data: [90, 95, 90, 80, 90],
+                        backgroundColor: 'rgba(224, 122, 95, 0.2)',
+                        borderColor: 'rgba(224, 122, 95, 1)'
+                    }]
+                },
+                options: { maintainAspectRatio: false }
+            });
+        });
+    </script>
+</body>
+</html>
