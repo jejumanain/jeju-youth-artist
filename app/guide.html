@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제주 청소년 작가 클럽 가입 안내 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --color-terracotta: #D35400;
+            --color-sage: #7D8E7A;
+            --color-charcoal: #2C3E50;
+            --color-paper: #FDFBF9;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #E5E7EB; /* 화면 배경: 회색 */
+            color: var(--color-charcoal);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* A4 규격 설정 */
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* 프린트 설정 */
+        @media print {
+            body { background: none; margin: 0; padding: 0; }
+            .a4-page {
+                margin: 0;
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+                page-break-after: always;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print { display: none; }
+        }
+
+        /* 차트 컨테이너 (요구사항 준수) */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 280px;
+        }
+
+        .section-title {
+            border-left: 6px solid var(--color-terracotta);
+            padding-left: 15px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -19px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--color-terracotta);
+            border-radius: 50%;
+        }
+    </style>
+    <!-- Chosen Palette: Artisan Earth -->
+    <!-- Application Structure Plan: 
+         1. Two-page A4 Layout: Structured as two separate .a4-page containers.
+         2. Page 1 Content: AI Era philosophy, Slogan, Vision Chart (Comparison), Membership Intro.
+         3. Page 2 Content: Detailed Fee Structure (with transparency note), Rules (Attendance), History (Timeline), and April Meetup/Call to Action.
+         4. Interaction: Single print button on screen, Radar chart initialized on load.
+    -->
+    <!-- Visualization & Content Choices: 
+         - Radar Chart: Contrasts 'Standard Rote Education' vs. 'Artist Club' to justify the membership fee and structure.
+         - Grid Layout: Used for fee tables and schedules for clean alignment.
+         - Unicode Icons: Used instead of SVG to maintain constraints.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased">
+
+    <!-- Screen Navigation & Print Button -->
+    <div class="no-print bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 py-4 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-lg font-bold">제주 청소년 작가 클럽 <span class="text-[#D35400]">가입 가이드</span></h1>
+                <p class="text-xs text-gray-500">인쇄 시 A4 양면(2페이지)으로 최적화되어 출력됩니다.</p>
+            </div>
+            <button onclick="window.print()" class="bg-[#D35400] text-white px-6 py-2 rounded-full font-bold hover:bg-[#A04000] transition-all flex items-center gap-2">
+                <span>🖨️</span> 안내문 인쇄하기
+            </button>
+        </div>
+    </div>
+
+    <!-- PAGE 1 -->
+    <div class="a4-page">
+        <!-- Header -->
+        <header class="flex justify-between items-start border-b-2 border-[#2C3E50] pb-6 mb-10">
+            <div>
+                <h2 class="text-sm font-bold tracking-[0.3em] text-[#7D8E7A] uppercase mb-1">Jeju Youth Artist Club</h2>
+                <h1 class="text-3xl font-black text-[#2C3E50]">제주 청소년 작가 클럽</h1>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] text-gray-400">제주만화인연대 소속</p>
+                <p class="text-xs font-bold text-[#D35400]">jejumanain.org</p>
+            </div>
+        </header>
+
+        <!-- Intro Philosophy -->
+        <section class="mb-12">
+            <h3 class="text-xs font-bold text-[#D35400] mb-3">AI 시대에 던지는 질문</h3>
+            <h2 class="text-2xl font-bold leading-tight mb-6">AI가 그릴 수 없는 단 한 가지,<br>우리의 <span class="text-[#D35400]">어제와 오늘</span></h2>
+            <div class="text-sm text-gray-600 leading-relaxed space-y-4">
+                <p>명령어 한 번이면 완벽한 그림이 나오는 시대, 우리 아이들에게 여전히 펜을 쥐여줘야 할까요?</p>
+                <p>AI는 결과를 복제하지만, 인간은 과정을 살아냅니다. AI가 대체할 수 없는 것은 기술이 아니라 창작자 개인이 딛고 있는 땅의 냄새와 그 땅에서 맺어진 진심 어린 서사입니다.</p>
+                <div class="bg-stone-50 p-6 rounded-2xl border-l-4 border-[#7D8E7A] italic">
+                    "모방보다 귀한 진심을, 기술보다 깊은 서사를 꽃피울 시간"
+                </div>
+            </div>
+        </section>
+
+        <!-- Vision Chart -->
+        <section class="mb-12">
+            <h3 class="section-title">왜 '작가 클럽'인가요?</h3>
+            <div class="flex flex-col items-center">
+                <div class="chart-container">
+                    <canvas id="visionChart"></canvas>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-6 w-full">
+                    <div class="bg-stone-50 p-4 rounded-xl">
+                        <h4 class="text-xs font-bold text-[#7D8E7A] mb-1">일반 교육</h4>
+                        <p class="text-[10px] text-gray-500">기초 툴 활용 및 모방 위주의 체험 교육</p>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-xl">
+                        <h4 class="text-xs font-bold text-[#D35400] mb-1">청소년 작가 클럽</h4>
+                        <p class="text-[10px] text-gray-500">포트폴리오 완성 및 실전 연재 중심 활동</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Membership Intro -->
+        <section>
+            <h3 class="section-title">가입 자격 안내</h3>
+            <div class="bg-white border-2 border-[#D35400] p-6 rounded-3xl">
+                <p class="text-sm font-bold text-gray-800 mb-4">"창작의 준비가 된 당신을 모십니다"</p>
+                <ul class="space-y-4 text-xs text-gray-600">
+                    <li class="flex items-start">
+                        <span class="badge bg-[#D35400] text-white">필수</span>
+                        <span>웹툰/만화 관련 기초 교육 <strong>20시간 이상</strong> 이수자</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="badge bg-[#7D8E7A] text-white">서류</span>
+                        <span>지도 작가 추천서, 기관 수료증, 학교 동아리 선생님 추천서 중 1종</span>
+                    </li>
+                </ul>
+                <p class="mt-6 text-[10px] text-gray-400 leading-relaxed border-t pt-4">
+                    * 자격 요건이 부족한 경우, 거주지 근처 제주만화인연대 작가님을 통한 '브릿지 프로그램' 연결이 가능합니다.
+                </p>
+            </div>
+        </section>
+
+        <!-- Page Number -->
+        <footer class="absolute bottom-10 left-0 w-full text-center text-[10px] text-gray-300">
+            - 1 / 2 -
+        </footer>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="a4-page">
+        <!-- Fees & Transparency -->
+        <section class="mb-12">
+            <h3 class="section-title">멤버십 및 운영 재정 안내</h3>
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div class="border rounded-2xl p-6 text-center">
+                    <p class="text-xs text-gray-400 mb-1">연 가입비</p>
+                    <p class="text-xl font-bold text-[#2C3E50]">30,000원</p>
+                </div>
+                <div class="border rounded-2xl p-6 text-center">
+                    <p class="text-xs text-gray-400 mb-1">월 활동 회비</p>
+                    <p class="text-xl font-bold text-[#2C3E50]">80,000원</p>
+                </div>
+            </div>
+            <div class="bg-stone-50 p-6 rounded-2xl text-[11px] leading-relaxed text-gray-600">
+                <p class="font-bold text-gray-800 mb-2">💡 투명한 운영을 위한 안내</p>
+                <p>본 클럽의 회비는 지속 가능한 운영을 위한 최소한의 비용입니다. 참여 작가님들은 평소 받으시는 강사비보다 적은 <strong>최소 활동비</strong>만 받으시며, 제주 만화의 미래를 위해 봉사하는 마음으로 동참하고 계십니다.</p>
+                <p class="mt-2 text-gray-400">* 소재 발굴 투어 시 교통비, 식대, 입장료 등은 별도입니다.</p>
+            </div>
+        </section>
+
+        <!-- Rules -->
+        <section class="mb-12">
+            <h3 class="section-title">작가의 루틴 : 회원 관리 규정</h3>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-gray-50 p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-1">📈</p>
+                    <p class="text-[10px] font-bold">참석률 80% 이상</p>
+                    <p class="text-[9px] text-gray-400 mt-1">차년도 가입비 면제</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-1">⚠️</p>
+                    <p class="text-[10px] font-bold">월 50% 미만 중지</p>
+                    <p class="text-[9px] text-gray-400 mt-1">3회 누적 시 자격 정지</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl text-center">
+                    <p class="text-2xl mb-1">🎁</p>
+                    <p class="text-[10px] font-bold">우수회원 멘토링</p>
+                    <p class="text-[9px] text-gray-400 mt-1">1:1 무료 멘토링권</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- History -->
+        <section class="mb-12">
+            <h3 class="section-title">동아리 연혁</h3>
+            <div class="ml-6 border-l-2 border-stone-100 pl-6 space-y-6 relative">
+                <div class="relative timeline-item">
+                    <p class="text-[10px] font-bold text-[#D35400]">2025. 01</p>
+                    <p class="text-xs font-bold">제주만화인연대 청소년작가클럽 확대 개편</p>
+                    <p class="text-[10px] text-gray-400">서귀포를 넘어 제주 전 지역으로 거점 확장</p>
+                </div>
+                <div class="relative timeline-item">
+                    <p class="text-[10px] font-bold text-gray-400">2022. 00</p>
+                    <p class="text-xs font-bold">공식 명칭 '스켈디오(SKELDIO)' 선정</p>
+                    <p class="text-[10px] text-gray-400">회원 내부 공모를 통한 독자적 정체성 확립</p>
+                </div>
+                <div class="relative timeline-item">
+                    <p class="text-[10px] font-bold text-gray-400">2020. 01</p>
+                    <p class="text-xs font-bold">서귀포청소년만화동아리 1기 모집</p>
+                    <p class="text-[10px] text-gray-400">제주 청소년 창작 모임의 첫 발을 떼다</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meetup & Contact -->
+        <section class="bg-[#2C3E50] text-white p-8 rounded-[2rem]">
+            <h3 class="text-xl font-bold mb-4 text-[#D35400]">4월 오프라인 밋업 일정</h3>
+            <div class="text-xs space-y-3 opacity-90 mb-6">
+                <p>📍 <strong>첫 모임:</strong> 4월 11일(토) 오전 10시 @제주웹툰캠퍼스 애니카페</p>
+                <p>📅 <strong>정기 모임:</strong> 매월 토요일 오전 10-12시 (온/오프 병행)</p>
+                <p>🔗 <strong>신청:</strong> 홈페이지 (youth.jejumanain.org)</p>
+            </div>
+            <div class="text-center pt-4 border-t border-gray-700">
+                <p class="text-[10px] text-gray-400 italic">"진정한 서사는 기술이 아닌 당신의 진심에서 시작됩니다."</p>
+            </div>
+        </section>
+
+        <!-- Page Number -->
+        <footer class="absolute bottom-10 left-0 w-full text-center text-[10px] text-gray-300">
+            - 2 / 2 -
+        </footer>
+    </div>
+
+    <script>
+        // --- Radar Chart Initialization ---
+        function initChart() {
+            const ctx = document.getElementById('visionChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['작품 완성도', '현장 네트워킹', '기초 기술', '창작 자유도', '개인 포트폴리오'],
+                    datasets: [
+                        {
+                            label: '일반 기초 교육',
+                            data: [40, 30, 90, 40, 30],
+                            backgroundColor: 'rgba(125, 142, 122, 0.2)',
+                            borderColor: 'rgba(125, 142, 122, 1)',
+                            pointBackgroundColor: 'rgba(125, 142, 122, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: '청소년 작가 클럽',
+                            data: [95, 95, 75, 95, 95],
+                            backgroundColor: 'rgba(211, 84, 0, 0.2)',
+                            borderColor: 'rgba(211, 84, 0, 1)',
+                            pointBackgroundColor: 'rgba(211, 84, 0, 1)',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { display: false },
+                            pointLabels: {
+                                font: { size: 10, family: 'Noto Sans KR', weight: '700' }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 10, family: 'Noto Sans KR' }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initChart();
+        }
+
+        // Ensure charts are rendered before printing
+        window.onbeforeprint = function() {
+            // Chart.js usually renders synchronously after initial drawing,
+            // but we ensure it's stable.
+        };
+    </script>
+</body>
+</html>

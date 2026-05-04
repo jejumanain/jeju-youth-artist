@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제주 청소년 작가 클럽 - 재정 및 운영 모델 보고서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #FAFAFA; color: #333333; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Background: #FAFAFA, Card: #FFFFFF, Primary Text: #333333, Accent: #E07A5F (Terracotta), Secondary: #81B29A (Muted Green), Dark Accent: #3D405B) -->
+    <!-- Application Structure Plan: 
+         This SPA translates the 'Financial Plan & Fee Structure' report into an interactive dashboard.
+         1. Introduction: Sets the context of why a paid model is necessary for sustainability.
+         2. Membership Structure: Outlines the 80,000 KRW fee and benefits (mentoring tickets) for quick consumption.
+         3. Interactive Simulator: The core tool. Users adjust expected member counts and fees to see the financial viability, instructor assignments, and break-even points in real-time. This replaces static tables with exploratory learning.
+         4. Cost Breakdown: A detailed view of fixed costs for transparency.
+         This dashboard layout was chosen because financial data is best understood when users can manipulate variables (members/fees) and immediately see the impact on sustainability (profit/loss) and quality (number of instructors).
+    -->
+    <!-- Visualization & Content Choices: 
+         - Bar Chart (Chart.js): Shows Revenue, Expense, and Profit across different member milestones (3, 5, 7, 10, 15). Chosen to clearly visualize the break-even point and economies of scale. Interactive via slider adjustments.
+         - Dynamic KPI Cards: Real-time text updates showing 'Assigned Instructors', 'Total Expense', and 'Net Balance'. Selected for immediate feedback during simulation.
+         - CSS Grid/Flexbox with Unicode Icons: Used for layout and visual grouping instead of SVG/Mermaid to maintain constraints while ensuring a clean, modern aesthetic.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased">
+
+    <nav class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="text-2xl font-bold text-[#E07A5F]">✏️ 제주청소년작가클럽</div>
+                <div class="hidden sm:flex space-x-6">
+                    <a href="#intro" class="text-gray-600 hover:text-[#E07A5F] font-medium">운영 취지</a>
+                    <a href="#membership" class="text-gray-600 hover:text-[#E07A5F] font-medium">멤버십 안내</a>
+                    <a href="#simulator" class="text-gray-600 hover:text-[#E07A5F] font-medium">재정 시뮬레이터</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <section id="intro" class="text-center max-w-3xl mx-auto">
+            <h1 class="text-4xl font-bold text-gray-900 mb-6">지속 가능한 창작 생태계를 위한 투명한 운영</h1>
+            <p class="text-lg text-gray-600 leading-relaxed">
+                이 페이지는 서귀포에서 제주 전역으로 확대되는 클럽의 안정적인 운영과 지도 작가님들의 정당한 활동비 보장을 위해 설계된 재정 구조를 설명합니다. 
+                단순한 비용 안내를 넘어, 여러분의 참여가 어떻게 질 높은 멘토링 환경을 구축하는지 직접 시뮬레이션해 보며 이해할 수 있습니다.
+            </p>
+        </section>
+
+        <section id="membership" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="mb-8 border-l-4 border-[#81B29A] pl-4">
+                <h2 class="text-2xl font-bold text-gray-900">하이브리드 멤버십 모델 (제안)</h2>
+                <p class="text-gray-600 mt-2">초기 회원의 부담을 최소화하면서도 고품질의 교육을 제공하기 위한 최적의 회비 구조입니다.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-[#fcf8f6] p-6 rounded-xl border border-[#f3e1db]">
+                    <div class="text-3xl mb-4">💎</div>
+                    <h3 class="text-xl font-bold text-[#E07A5F] mb-2">기본 회비: 월 80,000원</h3>
+                    <ul class="space-y-3 text-gray-700 mt-4">
+                        <li>✔️ 월 4회 정기 모임 참석 (온라인 2회, 오프라인 워크샵 2회)</li>
+                        <li>✔️ 현업 작가 2인 이상 상주 및 피드백</li>
+                        <li>✔️ 출석률 90% 이상 시 분기별 <strong>'1:1 집중 멘토링 티켓'</strong> (5만원 상당) 1매 증정</li>
+                    </ul>
+                </div>
+
+                <div class="bg-[#f4f7f6] p-6 rounded-xl border border-[#dce7e2]">
+                    <div class="text-3xl mb-4">🎯</div>
+                    <h3 class="text-xl font-bold text-[#81B29A] mb-2">별도 서비스: 1:1 집중 멘토링</h3>
+                    <ul class="space-y-3 text-gray-700 mt-4">
+                        <li>✔️ 비용: 1회 50,000원 (45분 기준)</li>
+                        <li>✔️ 대상: 개인 작품 연재 준비나 포트폴리오 완성을 원하는 학생</li>
+                        <li>✔️ 구조: 해당 작가님께 지급되며, 티켓 사용 시 클럽 재정에서 작가님께 비용을 보전합니다.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-yellow-50 p-4 rounded-lg text-sm text-yellow-800 border border-yellow-200 text-center">
+                💡 <strong>운영 전략:</strong> 4월 지역 순회 상담 시 모집된 초기 5명의 '파운딩 멤버'에게는 첫 3개월간 회비 할인(예: 60,000원) 혜택을 제공하여 빠르게 거점을 확보합니다.
+            </div>
+        </section>
+
+        <section id="simulator">
+            <div class="mb-8 border-l-4 border-[#E07A5F] pl-4">
+                <h2 class="text-2xl font-bold text-gray-900">운영비 시뮬레이터</h2>
+                <p class="text-gray-600 mt-2">회원 수와 회비를 조정하여 클럽의 재정 자립도와 작가 배정 규모가 어떻게 변화하는지 확인해보세요. 최소 인원(5명)부터 지역 동아리 분리 기준(15명)까지의 흐름을 볼 수 있습니다.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100">
+                        <h3 class="text-lg font-bold mb-6 text-gray-800">⚙️ 운영 변수 설정</h3>
+                        
+                        <div class="space-y-8">
+                            <div>
+                                <label class="flex justify-between text-sm font-medium text-gray-700 mb-2">
+                                    <span>예상 회원 수</span>
+                                    <span class="text-[#E07A5F] font-bold text-lg" id="val-members">5명</span>
+                                </label>
+                                <input type="range" id="range-members" min="3" max="30" step="1" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="flex justify-between text-xs text-gray-400 mt-2">
+                                    <span>3명(위기)</span>
+                                    <span>15명(분리)</span>
+                                    <span>30명</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="flex justify-between text-sm font-medium text-gray-700 mb-2">
+                                    <span>월 회비 설정</span>
+                                    <span class="text-[#81B29A] font-bold text-lg" id="val-fee">80,000원</span>
+                                </label>
+                                <input type="range" id="range-fee" min="30000" max="150000" step="5000" value="80000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800 p-6 rounded-2xl text-gray-200 text-sm shadow-md">
+                        <h4 class="font-bold text-white mb-3 text-base">📌 내부 운영 규칙</h4>
+                        <ul class="space-y-2">
+                            <li>• 지도작가 최소 2인 필수 상주</li>
+                            <li>• 회원 7명 초과 시, 5명당 작가 1인 추가 배정</li>
+                            <li>• 작가 활동비: 온라인 3만원 / 오프라인 5만원</li>
+                            <li>• 워크샵 강의 시 지도작가 추가 수당 +5만원</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center transition-all" id="card-instructors">
+                            <p class="text-gray-500 text-sm mb-1 font-medium">배정 지도작가</p>
+                            <p class="text-3xl font-bold text-[#3D405B]" id="out-instructors">2인</p>
+                            <p class="text-xs text-gray-400 mt-2">최소 2인 원칙 적용됨</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center transition-all">
+                            <p class="text-gray-500 text-sm mb-1 font-medium">월 필수 지출액</p>
+                            <p class="text-3xl font-bold text-red-500" id="out-expense">420,000원</p>
+                            <p class="text-xs text-gray-400 mt-2">강사비 및 수당 합계</p>
+                        </div>
+                        <div class="p-5 rounded-2xl shadow-sm border text-center transition-all" id="card-profit">
+                            <p class="text-gray-500 text-sm mb-1 font-medium">월 예상 잔액</p>
+                            <p class="text-3xl font-bold" id="out-profit">-20,000원</p>
+                            <p class="text-xs mt-2" id="out-profit-desc">클럽 운영 예비비</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-bold mb-2 text-gray-800">인원수별 수지 분석 트렌드</h3>
+                        <p class="text-sm text-gray-500 mb-6">현재 설정된 회비(<span id="chart-fee-label">80,000</span>원)를 기준으로, 인원 증가에 따른 수익성을 보여줍니다.</p>
+                        <div class="chart-container">
+                            <canvas id="financeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="details" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">월별 지출 상세 구조</h2>
+                <p class="text-gray-600 mt-2">재정 투명성을 위해 지도작가 활동비 산출 근거를 공개합니다. (기준: 월 4회 모임)</p>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 border-y border-gray-200">
+                            <th class="py-4 px-6 font-semibold">항목</th>
+                            <th class="py-4 px-6 font-semibold">단가 및 횟수</th>
+                            <th class="py-4 px-6 font-semibold text-right">금액 (현재 배정 인원 기준)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="py-4 px-6 font-medium text-gray-900">💻 온라인 활동비</td>
+                            <td class="py-4 px-6 text-gray-600">30,000원 × <span class="dyn-instructor">2</span>인 × 2회</td>
+                            <td class="py-4 px-6 text-right font-medium" id="tbl-online">120,000원</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="py-4 px-6 font-medium text-gray-900">🤝 오프라인 활동비</td>
+                            <td class="py-4 px-6 text-gray-600">50,000원 × <span class="dyn-instructor">2</span>인 × 2회</td>
+                            <td class="py-4 px-6 text-right font-medium" id="tbl-offline">200,000원</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="py-4 px-6 font-medium text-gray-900">🎤 워크샵 강의 수당</td>
+                            <td class="py-4 px-6 text-gray-600">50,000원(추가분) × 2회</td>
+                            <td class="py-4 px-6 text-right font-medium" id="tbl-workshop">100,000원</td>
+                        </tr>
+                        <tr class="bg-gray-50 border-t-2 border-gray-200">
+                            <td class="py-5 px-6 font-bold text-gray-900" colspan="2">총 지출 합계 (운영비/대관료 제외 실무 작가비)</td>
+                            <td class="py-5 px-6 text-right font-bold text-[#E07A5F] text-lg" id="tbl-total">420,000원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-sm text-gray-400 mt-4 text-right">* 인건비 외 재료비, 대관료, 플랫폼 이용료 등의 변동비는 월 예상 잔액 내에서 별도 집행됩니다.</p>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>제주 청소년 작가 클럽 | 투명한 재정 운영을 약속합니다.</p>
+            <p class="mt-2">© 2024 Jeju Manain. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputMembers = document.getElementById('range-members');
+            const inputFee = document.getElementById('range-fee');
+            
+            const valMembers = document.getElementById('val-members');
+            const valFee = document.getElementById('val-fee');
+            
+            const outInstructors = document.getElementById('out-instructors');
+            const outExpense = document.getElementById('out-expense');
+            const outProfit = document.getElementById('out-profit');
+            const cardProfit = document.getElementById('card-profit');
+            const descProfit = document.getElementById('out-profit-desc');
+            const dynInstructors = document.querySelectorAll('.dyn-instructor');
+            const chartFeeLabel = document.getElementById('chart-fee-label');
+
+            const tblOnline = document.getElementById('tbl-online');
+            const tblOffline = document.getElementById('tbl-offline');
+            const tblTotal = document.getElementById('tbl-total');
+
+            let chartInstance = null;
+
+            function calculateLogic(members, fee) {
+                let instructorCount = 2;
+                if (members > 7) {
+                    instructorCount = 2 + Math.ceil((members - 7) / 5);
+                }
+
+                const onlineFee = 30000 * instructorCount * 2;
+                const offlineFee = 50000 * instructorCount * 2;
+                const workshopExtra = 50000 * 2; 
+                
+                const totalExpense = onlineFee + offlineFee + workshopExtra;
+                const totalRevenue = members * fee;
+                const profit = totalRevenue - totalExpense;
+
+                return { instructorCount, onlineFee, offlineFee, workshopExtra, totalExpense, totalRevenue, profit };
+            }
+
+            function updateUI() {
+                const members = parseInt(inputMembers.value);
+                const fee = parseInt(inputFee.value);
+                
+                valMembers.textContent = `${members}명`;
+                valFee.textContent = `${fee.toLocaleString()}원`;
+                chartFeeLabel.textContent = fee.toLocaleString();
+
+                const data = calculateLogic(members, fee);
+
+                outInstructors.textContent = `${data.instructorCount}인`;
+                outExpense.textContent = `${data.totalExpense.toLocaleString()}원`;
+                outProfit.textContent = `${data.profit.toLocaleString()}원`;
+
+                if (data.profit >= 0) {
+                    cardProfit.className = 'p-5 rounded-2xl shadow-sm border text-center transition-all bg-emerald-50 border-emerald-100';
+                    outProfit.className = 'text-3xl font-bold text-emerald-600';
+                    descProfit.className = 'text-xs mt-2 text-emerald-600';
+                    descProfit.textContent = '클럽 운영 예비비로 적립 가능';
+                } else {
+                    cardProfit.className = 'p-5 rounded-2xl shadow-sm border text-center transition-all bg-red-50 border-red-100';
+                    outProfit.className = 'text-3xl font-bold text-red-600';
+                    descProfit.className = 'text-xs mt-2 text-red-500';
+                    descProfit.textContent = '재정 적자 (회비/인원 조정 필요)';
+                }
+
+                dynInstructors.forEach(el => el.textContent = data.instructorCount);
+                tblOnline.textContent = `${data.onlineFee.toLocaleString()}원`;
+                tblOffline.textContent = `${data.offlineFee.toLocaleString()}원`;
+                tblTotal.textContent = `${data.totalExpense.toLocaleString()}원`;
+
+                updateChart(fee);
+            }
+
+            function initChart() {
+                const ctx = document.getElementById('financeChart').getContext('2d');
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['3명', '5명', '7명', '10명', '15명(분리)'],
+                        datasets: [
+                            { label: '총 수입 (만원)', backgroundColor: '#81B29A', data: [] },
+                            { label: '총 지출 (만원)', backgroundColor: '#E07A5F', data: [] },
+                            { label: '순 이익 (만원)', backgroundColor: '#3D405B', data: [] }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.raw.toLocaleString() + '만원';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            function updateChart(currentFee) {
+                const milestones = [3, 5, 7, 10, 15];
+                const revData = [];
+                const expData = [];
+                const profData = [];
+
+                milestones.forEach(m => {
+                    const res = calculateLogic(m, currentFee);
+                    revData.push(res.totalRevenue / 10000);
+                    expData.push(res.totalExpense / 10000);
+                    profData.push(res.profit / 10000);
+                });
+
+                chartInstance.data.datasets[0].data = revData;
+                chartInstance.data.datasets[1].data = expData;
+                chartInstance.data.datasets[2].data = profData;
+                chartInstance.update();
+            }
+
+            inputMembers.addEventListener('input', updateUI);
+            inputFee.addEventListener('input', updateUI);
+
+            initChart();
+            updateUI();
+        });
+    </script>
+</body>
+</html>

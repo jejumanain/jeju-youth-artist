@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제주 청소년 작가 클럽 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #FDFBF9; color: #2C3E50; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .page-section { display: none; }
+        .page-section.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-link { transition: all 0.3s ease; }
+        .nav-link.active { color: #D35400; border-bottom: 2px solid #D35400; font-weight: 700; }
+    </style>
+    <!-- Chosen Palette: Artisan Earth (Background: #FDFBF9, Terracotta: #D35400, Sage: #7D8E7A, Charcoal: #2C3E50) -->
+    <!-- Application Structure Plan: 
+         1. Intro: Addressing AI-era anxiety and defining the club's philosophy.
+         2. About & Vision: Comparative analysis via Radar chart to justify the "Production-focused" model.
+         3. Membership Guide: Comprehensive details on qualifications, fees (with transparency notes), and rules.
+         4. History: Timeline of growth from 2020 Seogwipo to 2025 Jeju-wide.
+         5. Schedule: Detailed April meetup info and join link.
+         This structure leads the user from emotional resonance (Intro) to logical justification (Vision) and finally to actionable information (Membership/Schedule).
+    -->
+    <!-- Visualization & Content Choices: 
+         - Radar Chart: Compares 'Standard Rote Education' vs. 'Artist Club' across 5 creative dimensions. 
+         - Vertical Timeline: Visualizes the evolution from 'Skelidio' to 'Jeju Youth Artist Club'.
+         - Fee Cards: Breaks down costs with specific emphasis on the instructors' volunteer spirit.
+         - Icons: Using Unicode emojis to maintain 'No SVG' constraint while keeping it visual.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased selection:bg-orange-100">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="text-xl font-bold tracking-tight cursor-pointer" onclick="navigate('home')">
+                JEJU <span class="text-[#D35400]">YOUTH ARTIST</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-stone-500">
+                <button onclick="navigate('home')" class="nav-link py-2" id="nav-home">홈</button>
+                <button onclick="navigate('vision')" class="nav-link py-2" id="nav-vision">운영 비전</button>
+                <button onclick="navigate('membership')" class="nav-link py-2" id="nav-membership">회원제도</button>
+                <button onclick="navigate('history')" class="nav-link py-2" id="nav-history">연혁</button>
+                <button onclick="navigate('schedule')" class="nav-link py-2" id="nav-schedule">4월 밋업</button>
+            </div>
+            <button onclick="navigate('schedule')" class="bg-[#D35400] text-white px-5 py-2 rounded-full text-xs font-bold hover:shadow-lg transition-all">지금 참여하기</button>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-20">
+
+        <!-- SECTION: Home (Intro) -->
+        <section id="home" class="page-section active max-w-4xl mx-auto px-6">
+            <div class="mb-16">
+                <h3 class="text-[#7D8E7A] font-bold tracking-widest text-xs mb-4 uppercase">AI 시대에 던지는 질문</h3>
+                <h2 class="text-3xl md:text-5xl font-bold mb-8 leading-tight">AI가 그릴 수 없는 단 한 가지,<br><span class="text-[#D35400]">우리의 어제와 오늘</span></h2>
+                <div class="space-y-6 text-stone-600 leading-relaxed text-lg">
+                    <p>명령어 한 번이면 완벽한 그림이 나오는 시대, 우리 아이들에게 여전히 펜을 쥐여줘야 할까요?</p>
+                    <p>AI는 결과를 복제하지만, 인간은 과정을 살아냅니다. AI가 대체할 수 없는 것은 기술이 아니라 창작자 개인이 딛고 있는 땅의 냄새와 그 땅에서 맺어진 진심 어린 서사입니다.</p>
+                    <p class="font-bold text-stone-800">우리는 정답을 가르치지 않습니다. 나만의 질문을 던지는 법을 함께 고민합니다.</p>
+                </div>
+            </div>
+            
+            <div class="bg-stone-100 p-10 rounded-3xl text-center">
+                <p class="text-stone-500 mb-2 font-medium">제주만화인연대 청소년작가클럽 슬로건</p>
+                <h4 class="text-2xl font-bold text-[#2C3E50]">“모방보다 귀한 진심을, 기술보다 깊은 서사를 꽃피울 시간”</h4>
+            </div>
+        </section>
+
+        <!-- SECTION: Vision -->
+        <section id="vision" class="page-section max-w-5xl mx-auto px-6">
+            <div class="mb-12 border-l-8 border-[#D35400] pl-6">
+                <h2 class="text-3xl font-bold">운영 비전 및 필요성</h2>
+                <p class="text-stone-500 mt-2">입문 체험 교육을 넘어, 실전 창작 공동체로 도약합니다.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-stone-100">
+                    <h4 class="text-center font-bold mb-6 text-sm text-stone-400">교육 모델 비교 (일반 교육 vs 작가 클럽)</h4>
+                    <div class="chart-container">
+                        <canvas id="visionChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="p-6 bg-white rounded-2xl border border-stone-100">
+                        <h5 class="font-bold text-[#D35400] mb-2">💎 주입식 교육의 탈피</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed">기초 툴 활용법을 배우는 단계를 넘어, 실제 작품을 연재하고 완성하는 '작가적 태도'를 기릅니다.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-2xl border border-stone-100">
+                        <h5 class="font-bold text-[#7D8E7A] mb-2">📍 지역 기반의 성장 토양</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed">제주 전역의 작가님들과 함께 지역 이슈를 다루고 프로젝트를 수행하며 지역의 이야기를 세계로 알립니다.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-2xl border border-stone-100">
+                        <h5 class="font-bold text-stone-800 mb-2">🔄 지속 가능한 생태계</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed">연재 휴식기인 기성 작가와 성장을 원하는 청소년을 이어줌으로써 세대 간 지식 나눔과 창작의 연속성을 확보합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Membership -->
+        <section id="membership" class="page-section max-w-5xl mx-auto px-6">
+            <div class="mb-12 border-l-8 border-[#7D8E7A] pl-6">
+                <h2 class="text-3xl font-bold">회원 제도 안내</h2>
+                <p class="text-stone-500 mt-2">작가의 루틴을 만들고 작품을 완성하는 단단한 공동체</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-16">
+                <!-- Qualifications -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-stone-100">
+                    <h3 class="text-xl font-bold mb-6">📝 가입 자격 및 신청</h3>
+                    <ul class="space-y-4 text-sm text-stone-700">
+                        <li class="flex items-start">
+                            <span class="bg-orange-100 text-orange-600 px-2 py-0.5 rounded text-[10px] font-bold mr-3 mt-1">필수</span>
+                            <div>
+                                <strong>기초 교육 20시간 이수자</strong>
+                                <p class="text-xs text-stone-400 mt-1">작품 창작 위주 운영을 위한 최소한의 기초 소양입니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-stone-100 text-stone-600 px-2 py-0.5 rounded text-[10px] font-bold mr-3 mt-1">서류</span>
+                            <strong>추천서 혹은 수료증 1종</strong>
+                        </li>
+                    </ul>
+                    <div class="mt-8 p-4 bg-stone-50 rounded-xl">
+                        <h4 class="text-xs font-bold mb-2">💡 자격이 부족하신가요?</h4>
+                        <p class="text-[11px] text-stone-500 leading-relaxed">가까운 지역 작가님을 통해 기초 수업을 이수할 수 있도록 브릿지 프로그램을 지원합니다.</p>
+                    </div>
+                </div>
+
+                <!-- Fees -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-stone-100">
+                    <h3 class="text-xl font-bold mb-6">💰 멤버십 비용 및 투명성</h3>
+                    <div class="space-y-4 mb-6">
+                        <div class="flex justify-between items-center py-2 border-b border-stone-50">
+                            <span class="text-sm font-medium">연 가입비</span>
+                            <span class="font-bold text-[#D35400]">30,000원</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-stone-50">
+                            <span class="text-sm font-medium">월 활동 회비</span>
+                            <span class="font-bold text-[#D35400]">80,000원</span>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-stone-400 leading-relaxed">
+                        본 회비는 클럽의 지속가능성을 위한 최소한의 비용입니다. 멘토 작가님들은 평소 받으시는 강사료보다 적은 <strong>'최소 활동비'</strong>만을 받으며 제주 만화의 미래를 위해 봉사하는 마음으로 동참하고 계십니다.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Rules -->
+            <div class="bg-[#2C3E50] text-white p-10 rounded-3xl">
+                <h3 class="text-xl font-bold mb-8 text-center text-[#D35400]">작가의 성실함 : 출석 규정</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <p class="text-3xl mb-2">📈</p>
+                        <h4 class="font-bold mb-2">참여율 80% 이상</h4>
+                        <p class="text-xs text-stone-400">차년도 가입비(3만원) 및 <br>심사 면제 혜택</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl mb-2">⚠️</p>
+                        <h4 class="font-bold mb-2">자격 중지 규정</h4>
+                        <p class="text-xs text-stone-400">월 출석률 50% 미만 <br>3회 발생 시 중지</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl mb-2">🎁</p>
+                        <h4 class="font-bold mb-2">우수 활동 혜택</h4>
+                        <p class="text-xs text-stone-400">6개월 단위 선발 <br>1:1 무료 멘토링권 발급</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: History -->
+        <section id="history" class="page-section max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">클럽 연혁</h2>
+                <p class="text-stone-500 mt-2">서귀포의 씨앗에서 제주의 꽃으로</p>
+            </div>
+
+            <div class="relative border-l-2 border-stone-200 ml-4 md:ml-0 md:flex md:flex-col items-center">
+                <div class="md:w-full space-y-12">
+                    <!-- 2025 -->
+                    <div class="relative pl-8 md:pl-0 md:flex md:justify-end w-full">
+                        <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-[#D35400] border-4 border-white md:left-1/2 md:-translate-x-1/2"></div>
+                        <div class="md:w-5/12 text-left md:text-right md:pr-10">
+                            <span class="text-[#D35400] font-bold text-lg">2025. 01</span>
+                            <h4 class="font-bold text-xl mt-1">제주만화인연대 청소년작가클럽 출범</h4>
+                            <p class="text-sm text-stone-500 mt-2">서귀포 지역을 넘어 제주 전역으로 활동 거점 확대 및 전문 작가 연대 구축</p>
+                        </div>
+                    </div>
+                    <!-- 2022 -->
+                    <div class="relative pl-8 md:pl-0 md:flex md:justify-start w-full">
+                        <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-stone-300 border-4 border-white md:left-1/2 md:-translate-x-1/2"></div>
+                        <div class="md:w-5/12 text-left md:pl-10">
+                            <span class="text-stone-400 font-bold text-lg">2022. 00</span>
+                            <h4 class="font-bold text-xl mt-1">공식 명칭 '스켈디오(SKELDIO)' 선정</h4>
+                            <p class="text-sm text-stone-500 mt-2">회원 내부 공모를 통해 창작 공동체로서의 독자적인 정체성 확립</p>
+                        </div>
+                    </div>
+                    <!-- 2020 -->
+                    <div class="relative pl-8 md:pl-0 md:flex md:justify-end w-full">
+                        <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-stone-300 border-4 border-white md:left-1/2 md:-translate-x-1/2"></div>
+                        <div class="md:w-5/12 text-left md:text-right md:pr-10">
+                            <span class="text-stone-400 font-bold text-lg">2020. 01</span>
+                            <h4 class="font-bold text-xl mt-1">서귀포청소년만화동아리 1기 모집</h4>
+                            <p class="text-sm text-stone-500 mt-2">제주 지역 청소년 창작 모임의 첫 발을 떼다</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Schedule -->
+        <section id="schedule" class="page-section max-w-5xl mx-auto px-6">
+            <div class="bg-white p-12 rounded-[3rem] shadow-xl border border-stone-100 text-center">
+                <h3 class="text-3xl font-bold text-[#2C3E50] mb-6">4월 오프라인 밋업(Meet-up)</h3>
+                <p class="text-stone-500 mb-10 leading-relaxed">정식 활동 전, 작가님들과 미리 만나 상담하고 클럽을 체험해보세요. <br> 첫 모임은 이번 주 토요일 제주웹툰캠퍼스에서 시작됩니다.</p>
+                
+                <div class="grid md:grid-cols-2 gap-8 mb-12 text-left">
+                    <div class="p-6 bg-stone-50 rounded-2xl border border-stone-200">
+                        <h4 class="font-bold text-[#D35400] mb-4">📍 첫 번째 밋업 안내</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li>📅 <strong>일시:</strong> 4월 11일(토) 오전 10시 ~ 12시</li>
+                            <li>🏫 <strong>장소:</strong> 제주웹툰캠퍼스 애니카페</li>
+                            <li>👥 <strong>대상:</strong> 가입 희망 청소년 및 학부모님</li>
+                        </ul>
+                    </div>
+                    <div class="p-6 bg-stone-50 rounded-2xl border border-stone-200">
+                        <h4 class="font-bold text-[#7D8E7A] mb-4">🗓️ 이후 일정</h4>
+                        <p class="text-sm text-stone-600 mb-4">4월 한 달간 매주 토요일 오전 10-12시 상담 진행</p>
+                        <p class="text-xs text-stone-400">* 신청 인원에 따라 상세 장소는 추후 공지됩니다.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <button onclick="alert('가입 상담 신청 폼으로 이동합니다.')" class="w-full max-w-md bg-[#D35400] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#A04000] shadow-lg shadow-orange-500/20 transition-all">
+                        가입 상담 신청하기 (4월 밋업)
+                    </button>
+                    <p class="text-xs text-stone-400">정식 운영은 5월부터 시작됩니다.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-12 bg-white border-t border-stone-200 text-center">
+        <div class="max-w-6xl mx-auto px-6">
+            <h5 class="text-sm font-bold text-[#2C3E50] mb-4 uppercase tracking-widest">제주만화인연대 청소년작가클럽</h5>
+            <div class="flex justify-center space-x-4 mb-8">
+                <a href="#" class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 hover:bg-orange-100 transition-colors">📷</a>
+                <a href="#" class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 hover:bg-orange-100 transition-colors">🐦</a>
+                <a href="#" class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-500 hover:bg-orange-100 transition-colors">📄</a>
+            </div>
+            <p class="text-xs text-stone-400">본 사이트는 제주 청소년 작가들의 진정성 있는 서사를 지지하기 위해 제작되었습니다.</p>
+            <p class="text-[10px] text-stone-300 mt-2 italic">Designed for Sincere Narratives and Creative Growth</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Navigation Logic ---
+        function navigate(sectionId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            const activeNav = document.getElementById(`nav-${sectionId}`);
+            if(activeNav) activeNav.classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Trigger chart init if vision section
+            if (sectionId === 'vision') {
+                setTimeout(initChart, 100);
+            }
+        }
+
+        // --- Chart.js Logic ---
+        let visionChartInstance = null;
+        function initChart() {
+            const ctx = document.getElementById('visionChart').getContext('2d');
+            if (visionChartInstance) visionChartInstance.destroy();
+
+            visionChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['작품 완성도', '현장 네트워킹', '기초 기술 숙련', '창작 자유도', '개인 포트폴리오'],
+                    datasets: [
+                        {
+                            label: '일반 입문 교육',
+                            data: [40, 30, 90, 40, 30],
+                            backgroundColor: 'rgba(125, 142, 122, 0.2)',
+                            borderColor: 'rgba(125, 142, 122, 1)',
+                            pointBackgroundColor: 'rgba(125, 142, 122, 1)',
+                        },
+                        {
+                            label: '청소년작가클럽',
+                            data: [95, 90, 75, 95, 95],
+                            backgroundColor: 'rgba(211, 84, 0, 0.2)',
+                            borderColor: 'rgba(211, 84, 0, 1)',
+                            pointBackgroundColor: 'rgba(211, 84, 0, 1)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11, family: 'Noto Sans KR' } } }
+                    }
+                }
+            });
+        }
+
+        // Mobile Nav Helper (Simple)
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.replace('#', '') || 'home';
+            navigate(hash);
+        });
+    </script>
+</body>
+</html>
