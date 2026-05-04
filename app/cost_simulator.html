@@ -1,0 +1,208 @@
+import React, { useState, useMemo } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { Users, Coins, UserCheck, TrendingUp } from 'lucide-react';
+
+const App = () => {
+  const [memberCount, setMemberCount] = useState(5);
+  const [membershipFee, setMembershipFee] = useState(80000);
+
+  // 운영 비용 계산 로직
+  const financialData = useMemo(() => {
+    // 1. 지도작가 수 계산 (7명까지 2인, 이후 5명당 1인 추가)
+    // 단, 최소 2인 보장 조건이므로 기본 2인
+    let instructorCount = 2;
+    if (memberCount > 7) {
+      instructorCount = 2 + Math.ceil((memberCount - 7) / 5);
+    }
+
+    // 2. 활동비 계산
+    const onlineFee = 30000 * instructorCount * 2;
+    const offlineFee = 50000 * instructorCount * 2;
+    const workshopExtra = 50000 * 2; // 월 2회 워크샵 주도 가정
+    
+    const totalExpense = onlineFee + offlineFee + workshopExtra;
+    const totalRevenue = memberCount * membershipFee;
+    const profit = totalRevenue - totalExpense;
+
+    return {
+      instructorCount,
+      onlineFee,
+      offlineFee,
+      workshopExtra,
+      totalExpense,
+      totalRevenue,
+      profit
+    };
+  }, [memberCount, membershipFee]);
+
+  // 차트 데이터 (인원별 수익성 변화)
+  const chartData = [3, 5, 7, 10, 15, 20].map(count => {
+    let instCount = 2;
+    if (count > 7) instCount = 2 + Math.ceil((count - 7) / 5);
+    const expense = (30000 * instCount * 2) + (50000 * instCount * 2) + 100000;
+    const revenue = count * membershipFee;
+    return {
+      name: `${count}명`,
+      수입: revenue / 10000,
+      지출: expense / 10000,
+      수익: (revenue - expense) / 10000
+    };
+  });
+
+  return (
+    <div className="min-h-screen bg-stone-50 p-4 md:p-8 font-sans text-stone-800">
+      <div className="max-w-6xl mx-auto">
+        <header className="mb-8 border-b border-stone-200 pb-6">
+          <h1 className="text-3xl font-bold text-stone-900 flex items-center gap-2">
+            <Coins className="text-orange-500" /> 제주 청소년 작가 클럽 운영비 시뮬레이터
+          </h1>
+          <p className="text-stone-500 mt-2">최소 인원 운영부터 지역 동아리 분리 단계까지의 재정 건전성을 확인합니다.</p>
+        </header>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* 컨트롤 패널 */}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+              <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                <Users size={20} className="text-orange-500" /> 운영 변수 설정
+              </h3>
+              
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-stone-600 mb-2">
+                    예상 회원 수: <span className="text-orange-600 font-bold">{memberCount}명</span>
+                  </label>
+                  <input 
+                    type="range" min="3" max="30" step="1" 
+                    value={memberCount} 
+                    onChange={(e) => setMemberCount(parseInt(e.target.value))}
+                    className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                  />
+                  <div className="flex justify-between text-xs text-stone-400 mt-1">
+                    <span>3명</span><span>15명(분리)</span><span>30명</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-stone-600 mb-2">
+                    월 회비 설정: <span className="text-orange-600 font-bold">{membershipFee.toLocaleString()}원</span>
+                  </label>
+                  <input 
+                    type="range" min="30000" max="150000" step="5000" 
+                    value={membershipFee} 
+                    onChange={(e) => setMembershipFee(parseInt(e.target.value))}
+                    className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-orange-50 p-6 rounded-2xl border border-orange-100">
+              <h4 className="font-bold text-orange-900 mb-2">📌 운영 규칙 요약</h4>
+              <ul className="text-sm text-orange-800 space-y-2">
+                <li>• 지도작가 기본 2인 상주</li>
+                <li>• 7명 초과 시 5명당 1인 추가</li>
+                <li>• 온라인 활동비: 3만원 / 오프라인: 5만원</li>
+                <li>• 워크샵 수당: 지도작가 +5만원 추가</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* 결과 디스플레이 */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* 요약 카드 */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-200 text-center">
+                <p className="text-stone-500 text-xs mb-1">배정 지도작가</p>
+                <p className="text-2xl font-bold text-stone-900">{financialData.instructorCount}인</p>
+                <p className="text-[10px] text-stone-400 mt-1">최소 2인 원칙 적용</p>
+              </div>
+              <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-200 text-center">
+                <p className="text-stone-500 text-xs mb-1">총 운영 지출</p>
+                <p className="text-2xl font-bold text-red-600">{financialData.totalExpense.toLocaleString()}원</p>
+                <p className="text-[10px] text-stone-400 mt-1">강사비/수당 합계</p>
+              </div>
+              <div className={`p-5 rounded-2xl shadow-sm border text-center ${financialData.profit >= 0 ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
+                <p className="text-stone-500 text-xs mb-1">월 예상 잔액</p>
+                <p className={`text-2xl font-bold ${financialData.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {financialData.profit.toLocaleString()}원
+                </p>
+                <p className="text-[10px] text-stone-400 mt-1">예비비/재료비 가용 금액</p>
+              </div>
+            </div>
+
+            {/* 차트 영역 */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+              <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
+                <TrendingUp size={20} className="text-orange-500" /> 인원수별 수지 분석 (단위: 만원)
+              </h3>
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    />
+                    <Legend />
+                    <Bar dataKey="수입" fill="#81B29A" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="지출" fill="#E07A5F" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="수익" fill="#3D405B" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* 상세 지출 내역 */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+              <h3 className="text-lg font-bold mb-4">상세 항목별 분석</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-stone-50 text-stone-500 border-b border-stone-200">
+                    <tr>
+                      <th className="px-4 py-3 font-medium">항목</th>
+                      <th className="px-4 py-3 font-medium">산출 근거</th>
+                      <th className="px-4 py-3 text-right font-medium">금액</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    <tr>
+                      <td className="px-4 py-3 font-medium">온라인 활동비</td>
+                      <td className="px-4 py-3 text-stone-500">3만원 × {financialData.instructorCount}인 × 2회</td>
+                      <td className="px-4 py-3 text-right">{financialData.onlineFee.toLocaleString()}원</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-3 font-medium">오프라인 활동비</td>
+                      <td className="px-4 py-3 text-stone-500">5만원 × {financialData.instructorCount}인 × 2회</td>
+                      <td className="px-4 py-3 text-right">{financialData.offlineFee.toLocaleString()}원</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-3 font-medium">워크샵 강의수당</td>
+                      <td className="px-4 py-3 text-stone-500">5만원(강의추가분) × 2회</td>
+                      <td className="px-4 py-3 text-right">{financialData.workshopExtra.toLocaleString()}원</td>
+                    </tr>
+                    <tr className="bg-stone-50 font-bold">
+                      <td className="px-4 py-3" colSpan="2">총 월 지출액</td>
+                      <td className="px-4 py-3 text-right text-red-600">{financialData.totalExpense.toLocaleString()}원</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <footer className="mt-12 text-center text-stone-400 text-xs">
+          <p>© 2024 Jeju Youth Artist Club Financial Simulation</p>
+          <p className="mt-1">인건비 외 재료비, 대관료, 플랫폼 이용료 등의 변동비는 별도 산정이 필요합니다.</p>
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default App;
